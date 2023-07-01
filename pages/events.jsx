@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 
 const Events = ({ eventLists }) => {
   const [filterEvents, setFilterEvents] = useState(eventLists);
-  const [dropdownValue, setDropdownValue] = useState(null);
+  var dropdownValue = null;
   const router = useRouter();
   const filterCategory = async (e) => {
     var response;
@@ -16,7 +16,7 @@ const Events = ({ eventLists }) => {
     }
     const data = await response.json();
     setFilterEvents(data);
-    setDropdownValue(e.target.value);
+    dropdownValue = e.target.value;
     router.push(`/events?category=${e.target.value}`, undefined, {
       shallow: true,
     });
@@ -46,16 +46,19 @@ const Events = ({ eventLists }) => {
           display: "flex",
           justifyContent: "center",
           flexWrap: "wrap",
-          gap: '1rem'
+          gap: "1rem",
         }}
       >
         {filterEvents.map((event) => {
           return (
-            <div key={event.id} style={{
-              borderRadius: '1rem',
-              boxShadow: '0px 0px 6px -2px gray',
-              padding: '12px  '
-            }}>
+            <div
+              key={event.id}
+              style={{
+                borderRadius: "1rem",
+                boxShadow: "0px 0px 6px -2px gray",
+                padding: "12px  ",
+              }}
+            >
               <h4>
                 {event.id} {event.title}
               </h4>
@@ -73,8 +76,10 @@ const Events = ({ eventLists }) => {
 export default Events;
 
 export async function getServerSideProps(context) {
-  console.log("context output", context);
-  const response = await fetch("http://localhost:4000/events");
+  const { query } = context;
+  const { category } = query;
+  const queryString = category ? `category=${dropdownValue}` : "";
+  const response = await fetch(`http://localhost:4000/events?${queryString}`);
   const data = await response.json();
   return {
     props: {
