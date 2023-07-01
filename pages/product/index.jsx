@@ -1,34 +1,30 @@
 import { useRouter } from "next/router";
-import Link from "next/link";
 
-const ProductList = ({ productId = 100 }) => {
-  const router = useRouter();
-  return (
-    <>
-      <ul>
-        <li>
+const ProductList = ({ products }) => {
+  return products.map((product) => {
+    return (
+      <>
+        <div key={product.id}>
           <h3>
-            <Link href="/product/1">Product 1</Link>
+            {product.id} {product.title}
           </h3>
-        </li>
-        <li>
-          <h3>
-            <Link href="/product/2">Product 2 </Link>
-          </h3>
-        </li>
-        <li>
-          <h3>
-            <Link href="/product/3">Product 3</Link>
-          </h3>
-        </li>
-        <li>
-          <h3>
-            <Link href={`/product/${productId}`}>Product {productId}</Link>
-          </h3>
-        </li>
-      </ul>
-      <button onClick={() => router.push("/")}>Home</button>
-    </>
-  );
+          <span>price : {product.price}$</span>
+          <p>{product.description}</p>
+        </div>
+        <hr />
+      </>
+    );
+  });
 };
 export default ProductList;
+
+export async function getStaticProps() {
+  const response = await fetch("http://localhost:4000/products");
+  const data = await response.json();
+
+  return {
+    props: {
+      products: data,
+    },
+  };
+}
