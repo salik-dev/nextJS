@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-const Post = ({ posts }) => {
+const Post = ({ posts }) => { 
   const router = useRouter();
   const handleBack = () => router.push("/");
 
@@ -15,13 +15,14 @@ const Post = ({ posts }) => {
               {post.id} {post.title}
             </h3>
           </Link>
-          <p>{post.body}</p>
+          <p>{post.body}</p> 
         </div>
       ))}
       <button onClick={handleBack}>Home</button>
     </>
   );
 };
+
 export default Post;
 
 export async function getStaticProps() {
